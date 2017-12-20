@@ -94,9 +94,11 @@ int main(int argc, char * argv[])
 	if (useLogfile)
 	{
 		bool success = (bool)LogInit("./virtualjaguar.log");	// Init logfile
-
+		
 		if (!success)
 			printf("Failed to open virtualjaguar.log for writing!\n");
+
+		FakeSkunkLogInit("./skunk.log");
 	}
 
 	// Set up SDL library
