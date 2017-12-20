@@ -29,6 +29,8 @@
 static FILE * log_stream = NULL;
 static uint32_t logSize = 0;
 
+static FILE * fake_skunk_console = NULL;
+
 int LogInit(const char * path)
 {
 	log_stream = fopen(path, "w");
@@ -48,6 +50,19 @@ void LogDone(void)
 {
 	if (log_stream != NULL)
 		fclose(log_stream);
+}
+
+int FakeSkunkLogInit(const char *path)
+{
+  log_stream = fopen(path, "w");
+  if(log_stream == NULL)
+    return 0;
+  return 1;
+}
+
+void FakeSkunkLogByte(const unsigned char c)
+{
+  fputc(c, fake_skunk_console);
 }
 
 //

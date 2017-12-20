@@ -11,11 +11,14 @@
 extern "C" {
 #endif
 
-int LogInit(const char *);
-FILE * LogGet(void);
-void LogDone(void);
-void WriteLog(const char * text, ...);
+  int LogInit(const char *);
+  FILE * LogGet(void);
+  void LogDone(void);
+  void WriteLog(const char * text, ...);
 
+  int FakeSkunkLogInit(const char *);
+  void FakeSkunkLogByte(const unsigned char c);
+  
 #ifdef __cplusplus
 }
 #endif

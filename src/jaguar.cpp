@@ -117,37 +117,6 @@ static bool start = false;
 void M68KInstructionHook(void)
 {
 	uint32_t m68kPC = m68k_get_reg(NULL, M68K_REG_PC);
-// Temp, for comparing...
-{
-/*	static char buffer[2048];//, mem[64];
-	m68k_disassemble(buffer, m68kPC, M68K_CPU_TYPE_68000);
-	printf("%08X: %s\n", m68kPC, buffer);//*/
-}
-//JaguarDasm(m68kPC, 1);
-//Testing Hover Strike...
-#if 0
-//Dasm(regs.pc, 1);
-static int hitCount = 0;
-static int inRoutine = 0;
-static int instSeen;
-
-//if (regs.pc == 0x80340A)
-if (m68kPC == 0x803416)
-{
-	hitCount++;
-	inRoutine = 1;
-	instSeen = 0;
-	printf("%i: $80340A start. A0=%08X, A1=%08X ", hitCount, m68k_get_reg(NULL, M68K_REG_A0), m68k_get_reg(NULL, M68K_REG_A1));
-}
-else if (m68kPC == 0x803422)
-{
-	inRoutine = 0;
-	printf("(%i instructions)\n", instSeen);
-}
-
-if (inRoutine)
-	instSeen++;
-#endif
 
 // For code tracing...
 #ifdef CPU_DEBUG_TRACING
@@ -206,145 +175,6 @@ if (inRoutine)
 		LogDone();
 		exit(0);
 	}
-
-	// Disassemble everything
-/*	{
-		static char buffer[2048];
-		m68k_disassemble(buffer, m68kPC, M68K_CPU_TYPE_68000);
-		WriteLog("%08X: %s", m68kPC, buffer);
-		WriteLog("\t\tA0=%08X, A1=%08X, D0=%08X, D1=%08X\n",
-			m68k_get_reg(NULL, M68K_REG_A0), m68k_get_reg(NULL, M68K_REG_A1),
-			m68k_get_reg(NULL, M68K_REG_D0), m68k_get_reg(NULL, M68K_REG_D1));
-	}//*/
-/*	if (m68kPC >= 0x807EC4 && m68kPC <= 0x807EDB)
-	{
-		static char buffer[2048];
-		m68k_disassemble(buffer, m68kPC, M68K_CPU_TYPE_68000);
-		WriteLog("%08X: %s", m68kPC, buffer);
-		WriteLog("\t\tA0=%08X, A1=%08X, D0=%08X, D1=%08X\n",
-			m68k_get_reg(NULL, M68K_REG_A0), m68k_get_reg(NULL, M68K_REG_A1),
-			m68k_get_reg(NULL, M68K_REG_D0), m68k_get_reg(NULL, M68K_REG_D1));
-	}//*/
-/*	if (m68kPC == 0x8D0E48 && effect_start5)
-	{
-		WriteLog("\nM68K: At collision detection code. Exiting!\n\n");
-		GPUDumpRegisters();
-		GPUDumpDisassembly();
-		log_done();
-		exit(0);
-	}//*/
-/*	uint16_t opcode = JaguarReadWord(m68kPC);
-	if (opcode == 0x4E75)	// RTS
-	{
-		if (startMemLog)
-//			WriteLog("Jaguar: Returning from subroutine to %08X\n", JaguarReadLong(m68k_get_reg(NULL, M68K_REG_A7)));
-		{
-			uint32_t addr = JaguarReadLong(m68k_get_reg(NULL, M68K_REG_A7));
-			bool found = false;
-			if (raPtr != 0xFFFFFFFF)
-			{
-				for(uint32_t i=0; i<=raPtr; i++)
-				{
-					if (returnAddr[i] == addr)
-					{
-						found = true;
-						break;
-					}
-				}
-			}
-
-			if (!found)
-				returnAddr[++raPtr] = addr;
-		}
-	}//*/
-
-//Flip Out! debugging...
-//805F46, 806486
-/*
-00805FDC: movea.l #$9c6f8, A0 		D0=00100010, A0=00100000
-00805FE2: move.w  #$10, (A0)+ 		D0=00100010, A0=0009C6F8
-00805FE6: cmpa.l  #$c96f8, A0 		D0=00100010, A0=0009C6FA
-00805FEC: bne     805fe2 		D0=00100010, A0=0009C6FA
-
-0080603A: move.l  #$11ed7c, $100.w 		D0=61700080, A0=000C96F8, D1=00000000, A1=000040D8
-
-0012314C: move.l  (A0)+, (A1)+ 		D0=61700080, A0=00124174, D1=00000000, A1=00F03FFC
-0012314E: cmpa.l  #$f04000, A1 		D0=61700080, A0=00124178, D1=00000000, A1=00F04000
-00123154: blt     12314c 		D0=61700080, A0=00124178, D1=00000000, A1=00F04000
-00123156: move.l  #$0, $f035d0.l 		D0=61700080, A0=00124178, D1=00000000, A1=00F04000
-00123160: move.l  #$f03000, $f02110.l 		D0=61700080, A0=00124178, D1=00000000, A1=00F04000
-0012316A: move.l  #$1, $f02114.l 		D0=61700080, A0=00124178, D1=00000000, A1=00F04000
-00123174: rts 		D0=61700080, A0=00124178, D1=00000000, A1=00F04000
-*/
-/*	static char buffer[2048];
-//if (m68kPC > 0x805F48) start = true;
-//if (m68kPC > 0x806486) start = true;
-//if (m68kPC == 0x805FEE) start = true;
-//if (m68kPC == 0x80600C)// start = true;
-if (m68kPC == 0x802058) start = true;
-//{
-//	GPUDumpRegisters();
-//	GPUDumpDisassembly();
-//
-//	M68K_show_context();
-//	log_done();
-//	exit(0);
-//}
-	if (start)
-	{
-	m68k_disassemble(buffer, m68kPC, M68K_CPU_TYPE_68000);
-	WriteLog("%08X: %s \t\tD0=%08X, A0=%08X, D1=%08X, A1=%08X\n", m68kPC, buffer, m68k_get_reg(NULL, M68K_REG_D0), m68k_get_reg(NULL, M68K_REG_A0), m68k_get_reg(NULL, M68K_REG_D1), m68k_get_reg(NULL, M68K_REG_A1));
-	}//*/
-
-/*	if (m68kPC == 0x803F16)
-	{
-		WriteLog("M68K: Registers found at $803F16:\n");
-		WriteLog("\t68K PC=%06X\n", m68k_get_reg(NULL, M68K_REG_PC));
-		for(int i=M68K_REG_D0; i<=M68K_REG_D7; i++)
-			WriteLog("\tD%i = %08X\n", i-M68K_REG_D0, m68k_get_reg(NULL, (m68k_register_t)i));
-		WriteLog("\n");
-		for(int i=M68K_REG_A0; i<=M68K_REG_A7; i++)
-			WriteLog("\tA%i = %08X\n", i-M68K_REG_A0, m68k_get_reg(NULL, (m68k_register_t)i));
-	}*/
-//Looks like the DSP is supposed to return $12345678 when it finishes its validation routine...
-// !!! Investigate !!!
-/*extern bool doDSPDis;
-	static bool disgo = false;
-	if (m68kPC == 0x50222)
-	{
-		// CD BIOS hacking
-//		WriteLog("M68K: About to stuff $12345678 into $F1B000 (=%08X)...\n", DSPReadLong(0xF1B000, M68K));
-//		DSPWriteLong(0xF1B000, 0x12345678, M68K);
-//		disgo = true;
-	}
-	if (m68kPC == 0x5000)
-//		doDSPDis = true;
-		disgo = true;
-	if (disgo)
-	{
-		static char buffer[2048];
-		m68k_disassemble(buffer, m68kPC, M68K_CPU_TYPE_68000);
-		WriteLog("%08X: %s", m68kPC, buffer);
-		WriteLog("\t\tA0=%08X, A1=%08X, D0=%08X, D1=%08X, D2=%08X\n",
-			m68k_get_reg(NULL, M68K_REG_A0), m68k_get_reg(NULL, M68K_REG_A1),
-			m68k_get_reg(NULL, M68K_REG_D0), m68k_get_reg(NULL, M68K_REG_D1), m68k_get_reg(NULL, M68K_REG_D2));
-	}//*/
-/*	if (m68kPC == 0x82E1A)
-	{
-		static char buffer[2048];
-		m68k_disassemble(buffer, m68kPC, 0);//M68K_CPU_TYPE_68000);
-		WriteLog("--> [Routine start] %08X: %s", m68kPC, buffer);
-		WriteLog("\t\tA0=%08X, A1=%08X, D0=%08X(cmd), D1=%08X(# bytes), D2=%08X\n",
-			m68k_get_reg(NULL, M68K_REG_A0), m68k_get_reg(NULL, M68K_REG_A1),
-			m68k_get_reg(NULL, M68K_REG_D0), m68k_get_reg(NULL, M68K_REG_D1), m68k_get_reg(NULL, M68K_REG_D2));
-	}//*/
-/*	if (m68kPC == 0x82E58)
-		WriteLog("--> [Routine end]\n");
-	if (m68kPC == 0x80004)
-	{
-		WriteLog("--> [Calling BusWrite2] D2: %08X\n", m68k_get_reg(NULL, M68K_REG_D2));
-//		m68k_set_reg(M68K_REG_D2, 0x12345678);
-	}//*/
 
 #ifdef LOG_CD_BIOS_CALLS
 /*
@@ -691,6 +521,9 @@ void WriteByte(uint32_t address, uint8_t byte, uint32_t who/*=UNKNOWN*/)
 	// BIOS ROM		($E00000 - $E3FFFF)		256K
 	else if (address <= 0xE3FFFF)
 		;	// Do nothing
+	else if (address == 0xE40000)
+	  FakeSkunkLogByte(byte)	// Logging hook.
+
 	// hole			($E40000 - $EFFFFF)		768K
 	else if (address <= 0xEFFFFF)
 		;	// Do nothing
