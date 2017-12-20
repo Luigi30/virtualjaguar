@@ -54,8 +54,8 @@ void LogDone(void)
 
 int FakeSkunkLogInit(const char *path)
 {
-  log_stream = fopen(path, "w");
-  if(log_stream == NULL)
+  fake_skunk_console = fopen(path, "w");
+  if(fake_skunk_console == NULL)
     return 0;
   return 1;
 }

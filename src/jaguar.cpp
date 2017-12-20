@@ -521,9 +521,12 @@ void WriteByte(uint32_t address, uint8_t byte, uint32_t who/*=UNKNOWN*/)
 	// BIOS ROM		($E00000 - $E3FFFF)		256K
 	else if (address <= 0xE3FFFF)
 		;	// Do nothing
-	else if (address == 0xE40000)
-	  FakeSkunkLogByte(byte)	// Logging hook.
-
+	else if (address <= 0xE40000)
+	  {
+	    WriteLog("FakeSkunkLogByte");
+	    FakeSkunkLogByte(byte);	// Logging hook.
+	  }
+	    
 	// hole			($E40000 - $EFFFFF)		768K
 	else if (address <= 0xEFFFFF)
 		;	// Do nothing
