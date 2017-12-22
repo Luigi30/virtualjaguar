@@ -13,3 +13,4 @@ make CROSS=i686-w64-mingw32.static-
 
 rel=`git log -1 --pretty=format:%ci | cut -d ' ' -f 1 | tr -d -`
 
+cp release/virtualjaguar.exe /mnt/e/virtualjaguar
